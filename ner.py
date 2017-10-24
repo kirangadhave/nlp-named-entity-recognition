@@ -12,4 +12,4 @@ test_file = sys.argv[2]
 locs_file = sys.argv[3]
 ftypes = sys.argv[4:]
 
-print(ftypes)
+print(ftypes) 
