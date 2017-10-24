@@ -43,15 +43,5 @@ locs_file = sys.argv[3]
 ftypes = sys.argv[4:]
 
 locations = load_locations(locs_file)
-
+test_data = load_data_from_file(test_file)
 train_data = load_data_from_file(train_file)
-
-count = 5
-
-for x in train_data:
-	for y in x.words:
-		print(y.label, y.pos, y.w)
-	print("New Sent")
-	count -= 1
-	if(count == 0):
-		sys.exit()
