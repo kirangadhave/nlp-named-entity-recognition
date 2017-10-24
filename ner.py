@@ -14,7 +14,7 @@ class Sentence:
 		self.words = words
 
 def load_locations(locs_file):
-	return pd.read_csv(locs_file, header = None)
+	return pd.read_csv(locs_file, header = None)[0].tolist()
 
 if(len(sys.argv) < 5): 
 	print("Error. Only following arguments")
@@ -26,5 +26,5 @@ test_file = sys.argv[2]
 locs_file = sys.argv[3]
 ftypes = sys.argv[4:]
 
-locations = load_locations(locs_file)[0].tolist()
-
+locations = load_locations(locs_file)
+print(locations)
