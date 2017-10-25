@@ -3,7 +3,6 @@ import sys
 import numpy as np
 import pandas as pd
 
-
 class Word:
 	def __init__(self, word_arr):
 		self.label = word_arr[0]
@@ -13,6 +12,25 @@ class Word:
 class Sentence:
 	def __init__(self, words):
 		self.words = words
+
+class Output:
+	def __init__(self, word, word_pos, sentence, ftypes):
+		self.word = word.w
+		self.wordcon = " ".join([sentence[word_pos - 1].w, sentence[word_pos + 1].w])
+		self.pos = word.pos
+		self.poscon = " ".join([sentence[word_pos - 1].pos, sentence[word_pos + 1].pos])
+		
+		self.abbr = "no"	
+		if(len(self.word) < 5 and self.word[-1] == '.' and self.word.replace('.','').isalpha()):
+			self.abbr = "yes"
+		
+		self.cap = "no"
+		if(self.word[0].isupper()):
+			self.cap = "yes"
+
+		self.loc = "no"
+		if(self.word in locations):
+			self.loc = "yes"
 
 def load_locations(locs_file):
 	return pd.read_csv(locs_file, header = None)[0].tolist()
