@@ -20,10 +20,8 @@ unknown = Word(["","UNKPOS","UNK"])
 
 class Output:
 	def __init__(self, word, word_pos, sentence, ftypes):
-		self.word = unknown.w
-		if word.w in word_list:
-			self.word = word.w
 		self.abbr = "no"	
+		self.word = word.w
 		self.pos = unknown.pos
 		if word.pos in pos_list:
 			self.pos = word.pos
@@ -68,6 +66,10 @@ class Output:
 		if "location" not in ftypes:
 			self.loc = "n/a"
 
+		if word.w not in word_list:
+			self.word = unknown.w
+
+
 	def print_o(self):
 		to_print = []
 		to_print.append(" ".join(["WORD:", self.word]))
@@ -99,9 +101,12 @@ def load_data_from_file(train_file, train_flag = True):
 		w = Word(["","PHIPOS","PHI"])
 		words = []
 		words.append(w)
-		for x in f.readlines():
+
+		lines = f.readlines()
+		lines.append(" ")
+		for x in lines:
 			if(x.strip() == ""):
-				if(len(words) > 0):
+				if(len(words) > 1):
 					w = Word(["","OMEGAPOS","OMEGA"])
 					words.append(w)
 					sentence = Sentence(words)
@@ -135,8 +140,15 @@ train_data = load_data_from_file(train_file)
 train_readable = process_outputs(train_data, ftypes)
 test_readable = process_outputs(test_data, ftypes)
 
+
 with open("train.txt.readable", 'w') as f:
 	for x in train_readable:
+		for y in x.print_o():
+			f.write(y)
+			f.write('\n')
+
+with open("test.txt.readable", 'w') as f:
+	for x in test_readable:
 		for y in x.print_o():
 			f.write(y)
 			f.write('\n')
