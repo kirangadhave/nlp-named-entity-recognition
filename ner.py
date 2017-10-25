@@ -3,8 +3,8 @@ import sys
 import numpy as np
 import pandas as pd
 
-word_list = []
-pos_list = []
+word_list = ["PHI", "OMEGA"]
+pos_list = ["PHIPOS", "OMEGAPOS"]
 
 class Word:
 	def __init__(self, word_arr):
@@ -32,14 +32,13 @@ class Output:
 		if sentence.words[word_pos + 1].w in word_list:
 			w_next = sentence.words[word_pos + 1].w
 
-		if sentence.words[word_pos - 1].pos in word_list:
+		if sentence.words[word_pos - 1].pos in pos_list:
 			pos_prev = sentence.words[word_pos - 1].pos
-		if sentence.words[word_pos + 1].pos in word_list:
+		if sentence.words[word_pos + 1].pos in pos_list:
 			pos_next = sentence.words[word_pos + 1].pos
 
 		self.poscon = " ".join([pos_prev, pos_next])
 		self.wordcon = " ".join([w_prev, w_next])
-
 
 		if(len(self.word) < 5 and self.word[-1] == '.' and self.word.replace('.','').isalpha()):
 			self.abbr = "yes"
@@ -66,15 +65,23 @@ class Output:
 			self.loc = "n/a"
 
 	def print_o(self):
-		print(self.word, self.wordcon, self.pos, self.poscon, self.abbr, self.cap, self.loc)
+		print("WORD:", self.word)
+		print("WORDCON:", self.wordcon)
+		print("POS:", self.pos)
+		print("POSCON:", self.poscon)
+		print("ABBR:", self.abbr)
+		print("CAP:", self.cap)
+		print("LOCATION:", self.loc)
+		print()
 
 def process_outputs(data, ftypes):
 	outputs_readable = []
 	for sent in data:
 		for i,word in enumerate(sent.words):
-			output = Output(word, i, sent, ftypes)
-			output.print_o()
-
+			if i != 1 and i != (len(sent.words) - 1):
+				output = Output(word, i, sent, ftypes)
+				outputs_readable.append(output)	
+	return outputs_readable
 
 def load_locations(locs_file):
 	return pd.read_csv(locs_file, header = None)[0].tolist()
@@ -119,4 +126,6 @@ locations = load_locations(locs_file)
 test_data = load_data_from_file(test_file, False)
 train_data = load_data_from_file(train_file)
 
-process_outputs(train_data, ftypes)
+A = process_outputs(train_data, ftypes)
+
+A[-1].print_o()
