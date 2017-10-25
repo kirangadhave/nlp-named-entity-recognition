@@ -20,9 +20,13 @@ unknown = Word(["","UNKPOS","UNK"])
 
 class Output:
 	def __init__(self, word, word_pos, sentence, ftypes):
-		self.word = word.w
+		self.word = unknown.w
+		if word.w in word_list:
+			self.word = word.w
 		self.abbr = "no"	
-		self.pos = word.pos
+		self.pos = unknown.pos
+		if word.pos in pos_list:
+			self.pos = word.pos
 		
 		w_prev = w_next = unknown.w
 		pos_prev = pos_next = unknown.pos
@@ -40,7 +44,7 @@ class Output:
 		self.poscon = " ".join([pos_prev, pos_next])
 		self.wordcon = " ".join([w_prev, w_next])
 
-		if(len(self.word) < 5 and self.word[-1] == '.' and self.word.replace('.','').isalpha()):
+		if( self.word[-1] == '.' and len(self.word) < 5 and (self.word.replace('.','').isalpha() or self.word.replace('.','') == "")):
 			self.abbr = "yes"
 		
 		self.cap = "no"
@@ -65,20 +69,22 @@ class Output:
 			self.loc = "n/a"
 
 	def print_o(self):
-		print("WORD:", self.word)
-		print("WORDCON:", self.wordcon)
-		print("POS:", self.pos)
-		print("POSCON:", self.poscon)
-		print("ABBR:", self.abbr)
-		print("CAP:", self.cap)
-		print("LOCATION:", self.loc)
-		print()
+		to_print = []
+		to_print.append(" ".join(["WORD:", self.word]))
+		to_print.append(" ".join(["WORDCON:", self.wordcon]))
+		to_print.append(" ".join(["POS:", self.pos]))
+		to_print.append(" ".join(["POSCON:", self.poscon]))
+		to_print.append(" ".join(["ABBR:", self.abbr]))
+		to_print.append(" ".join(["CAP:", self.cap]))
+		to_print.append(" ".join(["LOCATION:", self.loc]))
+		to_print.append("")
+		return to_print
 
 def process_outputs(data, ftypes):
 	outputs_readable = []
 	for sent in data:
 		for i,word in enumerate(sent.words):
-			if i != 1 and i != (len(sent.words) - 1):
+			if i != 0 and i != (len(sent.words) - 1):
 				output = Output(word, i, sent, ftypes)
 				outputs_readable.append(output)	
 	return outputs_readable
@@ -126,6 +132,11 @@ locations = load_locations(locs_file)
 test_data = load_data_from_file(test_file, False)
 train_data = load_data_from_file(train_file)
 
-A = process_outputs(train_data, ftypes)
+train_readable = process_outputs(train_data, ftypes)
+test_readable = process_outputs(test_data, ftypes)
 
-A[-1].print_o()
+with open("train.txt.readable", 'w') as f:
+	for x in train_readable:
+		for y in x.print_o():
+			f.write(y)
+			f.write('\n')
