@@ -16,16 +16,24 @@ class Sentence:
 def load_locations(locs_file):
 	return pd.read_csv(locs_file, header = None)[0].tolist()
 
+unknown = Word(["","UNKPOS","UNK"])
+
 def load_data_from_file(train_file):
 	sentences = []
 	with open(train_file, 'r') as f:
+		w = Word(["","PHIPOS","PHI"])
 		words = []
+		words.append(w)
 		for x in f.readlines():
 			if(x.strip() == ""):
 				if(len(words) > 0):
+					w = Word(["","OMEGAPOS","OMEGA"])
+					words.append(w)
 					sentence = Sentence(words)
 					sentences.append(sentence)
+					w = Word(["","PHIPOS","PHI"])
 					words = []
+					words.append(w)
 			else:
 				word_arr = x.strip().split()
 				word = Word(word_arr)
@@ -45,3 +53,4 @@ ftypes = sys.argv[4:]
 locations = load_locations(locs_file)
 test_data = load_data_from_file(test_file)
 train_data = load_data_from_file(train_file)
+
