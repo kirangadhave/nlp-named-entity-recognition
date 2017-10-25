@@ -74,7 +74,8 @@ unknown = Word(["","UNKPOS","UNK"])
 train_file = sys.argv[1]
 test_file = sys.argv[2]
 locs_file = sys.argv[3]
-ftypes = sys.argv[4:]
+ftypes = [x.lower() for x in sys.argv[4:]]
+print(ftypes)
 
 locations = load_locations(locs_file)
 test_data = load_data_from_file(test_file, False)
