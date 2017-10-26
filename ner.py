@@ -158,13 +158,13 @@ test_readable = process_outputs(test_data, ftypes)
 features = {"abr":1, "cap":2, "loc":3}
 feat_label = 4
 
-word_feat = {}
-prev_word_feat = {}
-next_word_feat = {}
+word_feat = {"PHI":4, "OMEGA":5, "UNK":6}
+prev_word_feat = {"PHI":7, "OMEGA":8, "UNK":9}
+next_word_feat = {"PHI":10, "OMEGA":11, "UNK":12}
 
-pos_feat = {}
-prev_pos_feat = {}
-next_pos_feat = {}
+pos_feat = {"PHIPOS":13, "OMEGAPOS":14, "UNKPOS":15}
+prev_pos_feat = {"PHIPOS":16, "OMEGAPOS":17, "UNKPOS":18}
+next_pos_feat = {"PHIPOS":19, "OMEGAPOS":20, "UNKPOS":21}
 
 for x in set(word_list):
 	word_feat[x] = feat_label
@@ -182,9 +182,3 @@ for x in set(pos_list):
 	next_pos_feat[x] = feat_label
 	feat_label += 1
 
-print(word_feat)
-print(prev_word_feat)
-print(next_word_feat)
-print(pos_list)
-print(prev_word_feat)
-print(next_word_feat)
