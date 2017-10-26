@@ -174,8 +174,6 @@ def process_vectors(data, ftypes):
 		vec.sort(key = lambda y:int(y.split(':')[0]))
 		vec.insert(0, vec_label)
 		vectors.append(vec)
-
-	print(vectors[0])
 	return vectors
 
 
