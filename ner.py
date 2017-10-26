@@ -143,20 +143,25 @@ def load_data_from_file(train_file, train_flag = True):
 					pos_list.append(word.pos)
 	return sentences
 
-def process_vectors(data):
+def process_vectors(data, ftypes):
 	vectors = []
 	for x in data:
 		vec = []
 		vec.append(labels_dict[x.label])
-		vec.append(str(word_feat[x.next_word]) + ":1")
-		vec.append(str(word_feat[x.prev_word]) + ":1")
-		vec.append(str(pos_feat[x.next_pos]) + ":1")
-		vec.append(str(pos_feat[x.prev_pos]) + ":1")
-		if x.abbr == "yes":
+		
+		if "wordcon" in ftypes:
+			vec.append(str(word_feat[x.next_word]) + ":1")
+			vec.append(str(word_feat[x.prev_word]) + ":1")
+		
+		if "wordcon" in ftypes:
+			vec.append(str(pos_feat[x.next_pos]) + ":1")
+			vec.append(str(pos_feat[x.prev_pos]) + ":1")
+		
+		if  "abbr" in ftypes and x.abbr == "yes":
 			vec.append(str(features["abr"]) + ":1")
-		if x.cap == "yes":
+		if "cap" in ftypes and x.cap == "yes":
 			vec.append(str(features["cap"]) + ":1")
-		if x.loc == "yes":
+		if "location" in ftypes and x.loc == "yes":
 			vec.append(str(features["loc"]) + ":1")
 
 		vec_label = vec[0]
@@ -164,6 +169,7 @@ def process_vectors(data):
 		vec.sort(key = lambda y:int(y.split(':')[0]))
 		vec.insert(0, vec_label)
 		vectors.append(vec)
+	print(vectors[0])
 	return vectors
 
 
@@ -215,5 +221,5 @@ for x in set(pos_list):
 	next_pos_feat[x] = feat_label
 	feat_label += 1
 
-train_vectors = process_vectors(train_readable)
-test_vectors = process_vectors(test_readable)
+train_vectors = process_vectors(train_readable, ftypes)
+test_vectors = process_vectors(test_readable, ftypes)
