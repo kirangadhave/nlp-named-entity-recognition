@@ -29,12 +29,11 @@ en_values = []
 entities = []
 
 for i,x in enumerate(prediction_data):
-	
 	if en_start == -1:
 		en_start = en_end = i
 		en_type = x[0]
 		en_values.append(x[1])
-	elif "B-" in x[0] or "O" is x[0]:
+	elif "B-" in x[0] or 'O' == x[0]:
 		if "B-" in en_type or "I-" in en_type:
 			ent = Entity()
 			ent.value = en_values
@@ -46,11 +45,44 @@ for i,x in enumerate(prediction_data):
 			en_type = x[0]
 			en_values = []
 			en_values.append(x[1])
+		elif "B-" in x[0]:
+			en_start = en_end = i
+			en_type = x[0]
+			en_values = []
+			en_values.append(x[1])
 	elif "I-" in x[0] and x[0][2:] == en_type[2:]:
 		if "B-" in en_type or "I-" in en_type:
 			en_values.append(x[1])
 			en_end += 1
 
+predictions = entities
+entities = []
 
-for x in entities:
-	print(x.value, x.type, x.start+1, x.end+1)
+for i,x in enumerate(gold_data):
+	if en_start == -1:
+		en_start = en_end = i
+		en_type = x[0]
+		en_values.append(x[1])
+	elif "B-" in x[0] or 'O' == x[0]:
+		if "B-" in en_type or "I-" in en_type:
+			ent = Entity()
+			ent.value = en_values
+			ent.type = ent_val[en_type[2:]]
+			ent.start = en_start
+			ent.end = en_end
+			entities.append(ent)
+			en_start = en_end = i
+			en_type = x[0]
+			en_values = []
+			en_values.append(x[1])
+		elif "B-" in x[0]:
+			en_start = en_end = i
+			en_type = x[0]
+			en_values = []
+			en_values.append(x[1])
+	elif "I-" in x[0] and x[0][2:] == en_type[2:]:
+		if "B-" in en_type or "I-" in en_type:
+			en_values.append(x[1])
+			en_end += 1
+
+gold = entities
