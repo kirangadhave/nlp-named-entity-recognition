@@ -4,7 +4,7 @@ a)  Programming language used: Python
 b)  Instructions for running:
     1. cd into the programming-assignment-3 directory.
 
-    2. Type - "python3.6 ner.py <train_file> <test_file> <loc_file> WORD [< optional ftypes >]" to run "ner" program. train and predict executables obtained after compiling the given library are present in programming-assignment-3 folder itself. Use them on newly generated train.txt.vector and test.txt.vector files.
+    2. Type - "python3.6 ner.py <train_file> <test_file> <loc_file> WORD [< optional ftypes >]" to run "ner" program.
 
     3. Type - "python3.6 eval.py <prediction_file> <gold_file>" to run "eval" program. Output is printed in eval.txt file.
 
