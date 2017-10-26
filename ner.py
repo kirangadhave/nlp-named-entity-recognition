@@ -8,6 +8,18 @@ pos_list = ["PHIPOS", "OMEGAPOS"]
 
 labels = {"O":0,"B-PER":1,"I-PER":2,"B-LOC":3,"I-LOC":4,"B-ORG":5,"I-ORG":6}
 
+features = {"abr":1, "cap":2, "loc":3}
+
+word_feat = {"PHI":4, "OMEGA":5, "UNK":6}
+prev_word_feat = {"PHI":7, "OMEGA":8, "UNK":9}
+next_word_feat = {"PHI":10, "OMEGA":11, "UNK":12}
+
+pos_feat = {"PHIPOS":13, "OMEGAPOS":14, "UNKPOS":15}
+prev_pos_feat = {"PHIPOS":16, "OMEGAPOS":17, "UNKPOS":18}
+next_pos_feat = {"PHIPOS":19, "OMEGAPOS":20, "UNKPOS":21}
+
+feat_label = 22
+
 class Word:
 	def __init__(self, word_arr):
 		self.label = word_arr[0]
@@ -155,16 +167,7 @@ test_readable = process_outputs(test_data, ftypes)
 # 			f.write(y)
 # 			f.write('\n')
 
-features = {"abr":1, "cap":2, "loc":3}
-feat_label = 4
 
-word_feat = {"PHI":4, "OMEGA":5, "UNK":6}
-prev_word_feat = {"PHI":7, "OMEGA":8, "UNK":9}
-next_word_feat = {"PHI":10, "OMEGA":11, "UNK":12}
-
-pos_feat = {"PHIPOS":13, "OMEGAPOS":14, "UNKPOS":15}
-prev_pos_feat = {"PHIPOS":16, "OMEGAPOS":17, "UNKPOS":18}
-next_pos_feat = {"PHIPOS":19, "OMEGAPOS":20, "UNKPOS":21}
 
 for x in set(word_list):
 	word_feat[x] = feat_label
@@ -182,3 +185,4 @@ for x in set(pos_list):
 	next_pos_feat[x] = feat_label
 	feat_label += 1
 
+process_vectors()
