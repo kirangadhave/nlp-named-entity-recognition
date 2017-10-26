@@ -6,6 +6,8 @@ import pandas as pd
 word_list = ["PHI", "OMEGA"]
 pos_list = ["PHIPOS", "OMEGAPOS"]
 
+labels = {"O":0,"B-PER":1,"I-PER":2,"B-LOC":3,"I-LOC":4,"B-ORG":5,"I-ORG":6}
+
 class Word:
 	def __init__(self, word_arr):
 		self.label = word_arr[0]
@@ -141,14 +143,48 @@ train_readable = process_outputs(train_data, ftypes)
 test_readable = process_outputs(test_data, ftypes)
 
 
-with open("train.txt.readable", 'w') as f:
-	for x in train_readable:
-		for y in x.print_o():
-			f.write(y)
-			f.write('\n')
+# with open("train.txt.readable", 'w') as f:
+# 	for x in train_readable:
+# 		for y in x.print_o():
+# 			f.write(y)
+# 			f.write('\n')
 
-with open("test.txt.readable", 'w') as f:
-	for x in test_readable:
-		for y in x.print_o():
-			f.write(y)
-			f.write('\n')
+# with open("test.txt.readable", 'w') as f:
+# 	for x in test_readable:
+# 		for y in x.print_o():
+# 			f.write(y)
+# 			f.write('\n')
+
+features = {"abr":1, "cap":2, "loc":3}
+feat_label = 4
+
+word_feat = {}
+prev_word_feat = {}
+next_word_feat = {}
+
+pos_feat = {}
+prev_pos_feat = {}
+next_pos_feat = {}
+
+for x in set(word_list):
+	word_feat[x] = feat_label
+	feat_label += 1
+	prev_word_feat[x] = feat_label
+	feat_label += 1
+	next_word_feat[x] = feat_label
+	feat_label += 1
+
+for x in set(pos_list):
+	pos_feat[x] = feat_label
+	feat_label += 1
+	prev_pos_feat[x] = feat_label
+	feat_label += 1
+	next_pos_feat[x] = feat_label
+	feat_label += 1
+
+print(word_feat)
+print(prev_word_feat)
+print(next_word_feat)
+print(pos_list)
+print(prev_word_feat)
+print(next_word_feat)
