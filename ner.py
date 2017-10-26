@@ -6,7 +6,7 @@ import pandas as pd
 word_list = ["PHI", "OMEGA"]
 pos_list = ["PHIPOS", "OMEGAPOS"]
 
-labels = {"O":0,"B-PER":1,"I-PER":2,"B-LOC":3,"I-LOC":4,"B-ORG":5,"I-ORG":6}
+labels_dict = {"O":0,"B-PER":1,"I-PER":2,"B-LOC":3,"I-LOC":4,"B-ORG":5,"I-ORG":6}
 
 features = {"abr":1, "cap":2, "loc":3}
 
@@ -34,6 +34,7 @@ unknown = Word(["","UNKPOS","UNK"])
 
 class Output:
 	def __init__(self, word, word_pos, sentence, ftypes):
+		self.label = word.label
 		self.abbr = "no"	
 		self.word = word.w
 		self.pos = unknown.pos
@@ -52,6 +53,11 @@ class Output:
 			pos_prev = sentence.words[word_pos - 1].pos
 		if sentence.words[word_pos + 1].pos in pos_list:
 			pos_next = sentence.words[word_pos + 1].pos
+
+		self.prev_word = w_prev
+		self.next_word = w_next
+		self.prev_pos = pos_prev
+		self.next_pos = pos_next
 
 		self.poscon = " ".join([pos_prev, pos_next])
 		self.wordcon = " ".join([w_prev, w_next])
@@ -137,6 +143,30 @@ def load_data_from_file(train_file, train_flag = True):
 					pos_list.append(word.pos)
 	return sentences
 
+def process_vectors(data):
+	vectors = []
+	for x in data:
+		vec = []
+		vec.append(labels_dict[x.label])
+		vec.append(str(word_feat[x.next_word]) + ":1")
+		vec.append(str(word_feat[x.prev_word]) + ":1")
+		vec.append(str(pos_feat[x.next_pos]) + ":1")
+		vec.append(str(pos_feat[x.prev_pos]) + ":1")
+		if x.abbr == "yes":
+			vec.append(str(features["abr"]) + ":1")
+		if x.cap == "yes":
+			vec.append(str(features["cap"]) + ":1")
+		if x.loc == "yes":
+			vec.append(str(features["loc"]) + ":1")
+
+		vec_label = vec[0]
+		vec = vec[1:]
+		vec.sort(key = lambda y:int(y.split(':')[0]))
+		vec.insert(0, vec_label)
+		vectors.append(vec)
+	return vectors
+
+
 if(len(sys.argv) < 5): 
 	print("Error. Only following arguments")
 	print(len(sys.argv))
@@ -185,4 +215,5 @@ for x in set(pos_list):
 	next_pos_feat[x] = feat_label
 	feat_label += 1
 
-process_vectors()
+train_vectors = process_vectors(train_readable)
+test_vectors = process_vectors(test_readable)
