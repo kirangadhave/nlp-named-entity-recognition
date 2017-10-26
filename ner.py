@@ -149,13 +149,18 @@ def process_vectors(data, ftypes):
 		vec = []
 		vec.append(labels_dict[x.label])
 		
+		vec.append(str(word_feat[x.word]) + ":1")
+
+		if "pos" in ftypes:
+			vec.append(str(pos_feat[x.pos]) + ":1")
+
 		if "wordcon" in ftypes:
-			vec.append(str(word_feat[x.next_word]) + ":1")
-			vec.append(str(word_feat[x.prev_word]) + ":1")
+			vec.append(str(next_word_feat[x.next_word]) + ":1")
+			vec.append(str(prev_word_feat[x.prev_word]) + ":1")
 		
-		if "wordcon" in ftypes:
-			vec.append(str(pos_feat[x.next_pos]) + ":1")
-			vec.append(str(pos_feat[x.prev_pos]) + ":1")
+		if "poscon" in ftypes:
+			vec.append(str(next_pos_feat[x.next_pos]) + ":1")
+			vec.append(str(prev_pos_feat[x.prev_pos]) + ":1")
 		
 		if  "abbr" in ftypes and x.abbr == "yes":
 			vec.append(str(features["abr"]) + ":1")
@@ -164,11 +169,12 @@ def process_vectors(data, ftypes):
 		if "location" in ftypes and x.loc == "yes":
 			vec.append(str(features["loc"]) + ":1")
 
-		vec_label = vec[0]
+		vec_label = str(vec[0])
 		vec = vec[1:]
 		vec.sort(key = lambda y:int(y.split(':')[0]))
 		vec.insert(0, vec_label)
 		vectors.append(vec)
+
 	print(vectors[0])
 	return vectors
 
@@ -191,17 +197,17 @@ train_readable = process_outputs(train_data, ftypes)
 test_readable = process_outputs(test_data, ftypes)
 
 
-# with open("train.txt.readable", 'w') as f:
-# 	for x in train_readable:
-# 		for y in x.print_o():
-# 			f.write(y)
-# 			f.write('\n')
+with open("train.txt.readable", 'w') as f:
+	for x in train_readable:
+		for y in x.print_o():
+			f.write(y)
+			f.write('\n')
 
-# with open("test.txt.readable", 'w') as f:
-# 	for x in test_readable:
-# 		for y in x.print_o():
-# 			f.write(y)
-# 			f.write('\n')
+with open("test.txt.readable", 'w') as f:
+	for x in test_readable:
+		for y in x.print_o():
+			f.write(y)
+			f.write('\n')
 
 
 
@@ -223,3 +229,14 @@ for x in set(pos_list):
 
 train_vectors = process_vectors(train_readable, ftypes)
 test_vectors = process_vectors(test_readable, ftypes)
+
+with open("train.txt.vector", 'w') as f:
+	for x in train_vectors:
+		f.write(" ".join(x))
+		f.write('\n')
+			
+
+with open("test.txt.vector", 'w') as f:
+	for x in test_vectors:
+		f.write(" ".join(x))
+		f.write('\n')
